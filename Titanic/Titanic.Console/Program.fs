@@ -13,8 +13,8 @@ let main argv =
         |> List.toArray
         |> Array.unzip
 
-    let iterations = 20
-    let numSteps = 10.
+    let iterations = 50
+    let numSteps = 20.
     let targetError = 0.01
 
     let classify = train examples labels iterations numSteps targetError

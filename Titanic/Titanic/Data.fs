@@ -29,10 +29,10 @@ module Data =
         reader.SetDelimiters(",")
         [ while (not reader.EndOfData) do yield reader.ReadFields() ]
     
-    let maybeDouble text =
+    let maybeDouble text def =
         match System.Double.TryParse(text) with 
         | true, v  -> v
-        | false, _ -> 0.
+        | false, _ -> def
 
     let age text = 
         match System.Double.TryParse(text) with 
@@ -41,13 +41,54 @@ module Data =
 
     let genderAsNumber g =
         if g = "male" then 1. else 0.
+    
+    let embark s = 
+        if s = "Q" then 0.55 
+        elif s = "C" then 0.39 
+        elif s = "S" then 0.34
+        else 0.38
+
+    let ticket (s: string) =        
+        if s.Length = 0 then 0.38 
+        else
+            let first = s.[0]
+            match first with
+            | '9' -> 1.00
+            | 'P' -> 0.65
+            | '1' -> 0.63
+            | 'F' -> 0.57
+            | '2' -> 0.46
+            | 'C' -> 0.34
+            | 'S' -> 0.32
+            | 'L' -> 0.25
+            | '3' -> 0.24
+            | '4' -> 0.2
+            | '6' -> 0.17
+            | 'W' -> 0.15
+            | '7' -> 0.11
+            | 'A' -> 0.07
+            | _   -> 0.38
+
+    let cabin (c: string) =
+        if c.Length = 0 then 0.30 
+        else
+            let first = c.[0]
+            match first with
+            | 'D' 
+            | 'E' 
+            | 'B' -> 0.75
+            | 'F' 
+            | 'C' -> 0.60
+            | 'G' 
+            | 'A' -> 0.50
+            | _   -> 0.38
 
     let readPassenger (line: string []) =
         Convert.ToInt32(line.[0]),
         { Class             = Convert.ToInt32(line.[1]);
           Name              = line.[2];
           Gender            = line.[3];
-          Age               = maybeDouble line.[4];
+          Age               = maybeDouble line.[4] 28.;
           SiblingsOrSpouses = Convert.ToInt32(line.[5]);
           ParentsOrChildren = Convert.ToInt32(line.[6]);
           Ticket            = line.[7];
@@ -59,11 +100,11 @@ module Data =
         { Class             = Convert.ToInt32(line.[0]);
           Name              = line.[1];
           Gender            = line.[2];
-          Age               = maybeDouble line.[3];
+          Age               = maybeDouble line.[3] 28.;
           SiblingsOrSpouses = Convert.ToInt32(line.[4]);
           ParentsOrChildren = Convert.ToInt32(line.[5]);
           Ticket            = line.[6];
-          Fare              = maybeDouble line.[7];
+          Fare              = maybeDouble line.[7] 14.45;
           Cabin             = line.[8];
           Embarked          = line.[9] }
 
@@ -73,7 +114,10 @@ module Data =
            genderAsNumber p.Gender;
            (float)p.SiblingsOrSpouses;
            (float)p.ParentsOrChildren;
-           (float)p.Fare |]
+           (float)p.Fare;
+           ticket p.Ticket;
+           cabin p.Cabin;
+           embark p.Embarked |]
 
     let prepare (pass: int * Passenger) =
             let surv, p = pass
