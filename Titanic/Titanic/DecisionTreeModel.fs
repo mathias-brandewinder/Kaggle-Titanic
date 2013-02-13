@@ -16,8 +16,9 @@ module DecisionTreeModel =
         | "Death" -> Death
         | _ -> failwith "kaboom"
 
-    let headers = [| "Class"; "Gender"; "SibOrSp"; "ParOrChi"; "Embark"; "Outcome" |]
-    let variables = headers.[0..4]
+    let headers = [| "Class"; "Gender"; "SibOrSp"; "ParOrChi"; "Embark"; "Outcome"; "GenderDetails"; "Title"; "CabinSection" |]
+    let vars = Array.length headers - 1
+    let variables = headers.[0 .. vars - 1]
 
     let correctedPoC v = if v > 2 then 2 else v
 
@@ -26,7 +27,10 @@ module DecisionTreeModel =
            p.Gender;
            p.SiblingsOrSpouses.ToString();
            (correctedPoC p.ParentsOrChildren).ToString();
-           p.Embarked |]
+           p.Embarked;
+           genderDetails p.Name;
+           job p.Name;
+           cabinSection p.Cabin |]
 
     let transform example =
         let label, passenger = example

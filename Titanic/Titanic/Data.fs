@@ -80,6 +80,10 @@ module Data =
             | 'A' -> 0.07
             | _   -> 0.38
 
+    let cabinSection (c: string) =
+        if c.Length = 0 then "Unknown"
+        else c.[0].ToString()
+
     let cabin (c: string) =
         if c.Length = 0 then 0.30 
         else
@@ -93,6 +97,18 @@ module Data =
             | 'G' 
             | 'A' -> 0.50
             | _   -> 0.38
+
+    let genderDetails (name: string) =
+        if name.Contains("Mr.") then "Mr"
+        elif name.Contains("Mrs.") then "Mrs"
+        elif name.Contains("Miss.") then "Miss"
+        else "Unknown"
+
+    let job (name: string) =
+        if name.Contains("Dr.") then "Dr"
+        elif name.Contains("Master") then "Master"
+        elif name.Contains("Rev.") then "Rev"
+        else "Unknown"
 
     let readExample (line: string []) =
         extractLabel line.[0],
