@@ -47,6 +47,7 @@
     <Compile Include="AdaBoostModel.fs" />
     <Compile Include="DecisionTrees.fs" />
     <Compile Include="DecisionTreeModel.fs" />
+    <Compile Include="CombinedModel.fs" />
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
