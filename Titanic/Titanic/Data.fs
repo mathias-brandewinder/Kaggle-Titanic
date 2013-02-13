@@ -15,6 +15,9 @@ type Passenger =
       Cabin: string;
       Embarked: string }
 
+type Outcome = Life | Death
+type Model = Passenger -> Outcome
+
 module Data =
 
     open System
@@ -28,22 +31,30 @@ module Data =
         reader.TextFieldType <- FieldType.Delimited
         reader.SetDelimiters(",")
         [ while (not reader.EndOfData) do yield reader.ReadFields() ]
-    
-    let maybeDouble text def =
+
+    let extractLabel (l: string) =
+        match Convert.ToInt32(l) with
+        | 1 -> Life
+        | 0 -> Death
+        | _ -> failwith "Unrecognized label"
+                
+    // Convert to a double, replacing with default in case of failure
+    let maybeDouble def text =
         match System.Double.TryParse(text) with 
         | true, v  -> v
         | false, _ -> def
 
-    let age text = 
-        match System.Double.TryParse(text) with 
-        | true, age -> Some(age) 
-        | false, _  -> None
+    let medianAge = 28.
+    let age = maybeDouble medianAge
+
+    let medianFare = 14.45
+    let fare = maybeDouble medianFare
 
     let genderAsNumber g =
         if g = "male" then 1. else 0.
     
     let embark s = 
-        if s = "Q" then 0.55 
+        if s   = "Q" then 0.55 
         elif s = "C" then 0.39 
         elif s = "S" then 0.34
         else 0.38
@@ -83,12 +94,12 @@ module Data =
             | 'A' -> 0.50
             | _   -> 0.38
 
-    let readPassenger (line: string []) =
-        Convert.ToInt32(line.[0]),
+    let readExample (line: string []) =
+        extractLabel line.[0],
         { Class             = Convert.ToInt32(line.[1]);
           Name              = line.[2];
           Gender            = line.[3];
-          Age               = maybeDouble line.[4] 28.;
+          Age               = age line.[4];
           SiblingsOrSpouses = Convert.ToInt32(line.[5]);
           ParentsOrChildren = Convert.ToInt32(line.[6]);
           Ticket            = line.[7];
@@ -96,43 +107,29 @@ module Data =
           Cabin             = line.[9];
           Embarked          = line.[10] }
 
-    let readPassenger2 (line: string []) =
+    let readValidation (line: string []) =
         { Class             = Convert.ToInt32(line.[0]);
           Name              = line.[1];
           Gender            = line.[2];
-          Age               = maybeDouble line.[3] 28.;
+          Age               = age line.[3];
           SiblingsOrSpouses = Convert.ToInt32(line.[4]);
           ParentsOrChildren = Convert.ToInt32(line.[5]);
           Ticket            = line.[6];
-          Fare              = maybeDouble line.[7] 14.45;
+          Fare              = fare line.[7];
           Cabin             = line.[8];
           Embarked          = line.[9] }
-
-    let passengerToArray p =
-        [| (float)p.Class;
-           p.Age;
-           genderAsNumber p.Gender;
-           (float)p.SiblingsOrSpouses;
-           (float)p.ParentsOrChildren;
-           (float)p.Fare;
-           ticket p.Ticket;
-           cabin p.Cabin;
-           embark p.Embarked |]
-
-    let prepare (pass: int * Passenger) =
-            let surv, p = pass
-            passengerToArray p,
-            if surv = 1 then 1.0 else -1.0 
           
     // create submission file
     let create sourceFile 
                resultFile 
-               (model: Passenger -> float) =
-
+               (model: Passenger -> Outcome) =
         let data = 
             parseCsv sourceFile 
             |> List.tail
-            |> List.map readPassenger2
-            |> List.map (fun e -> if (model e) > 0. then "1" else "0")
+            |> List.map readValidation
+            |> List.map (fun e -> 
+                match (model e) with 
+                | Life  -> "1" 
+                | Death -> "0")
             |> List.toArray
         File.WriteAllLines(resultFile, data)
