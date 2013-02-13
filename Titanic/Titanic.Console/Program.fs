@@ -1,6 +1,7 @@
 ﻿open Titanic.Data
 open MachineLearning.AdaBoost
 open Titanic.AdaBoostModel
+open Titanic.DecisionTreeModel
 
 [<EntryPoint>]
 let main argv = 
@@ -12,12 +13,12 @@ let main argv =
         |> List.tail
         |> List.map readExample
 
-    let adaClassifier = train learningSample
+    //let adaClassifier = train learningSample
+    let treeClassifier = train learningSample
 
     let submissionPath = @"C:\Users\Mathias\Desktop\submission.csv"
     let submit = @"C:\Users\Mathias\Desktop\result.csv"
-//    let model passenger = classify (passengerToArray passenger)
-//    create submissionPath submit model
+    create submissionPath submit treeClassifier
 
     printfn "Done"
     0 // return an integer exit code
