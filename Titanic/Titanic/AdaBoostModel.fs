@@ -11,10 +11,10 @@ module AdaBoostModel =
            genderAsNumber p.Gender;
            (float)p.SiblingsOrSpouses;
            (float)p.ParentsOrChildren;
-           (float)p.Fare;
-           ticket p.Ticket;
-           cabin p.Cabin;
-           embark p.Embarked |]
+           (float)p.Fare; |]
+//           ticket p.Ticket;
+//           cabin p.Cabin;
+//           embark p.Embarked |]
     
     let extractLabel label =
         match label with
