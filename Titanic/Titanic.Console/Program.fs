@@ -1,5 +1,4 @@
 ﻿open Titanic.Data
-open MachineLearning.AdaBoost
 
 [<EntryPoint>]
 let main argv = 

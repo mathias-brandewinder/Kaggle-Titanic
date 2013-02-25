@@ -32,11 +32,16 @@ module Data =
         reader.SetDelimiters(",")
         [ while (not reader.EndOfData) do yield reader.ReadFields() ]
 
-    let extractLabel (l: string) =
+    let labelToOutcome (l: string) =
         match Convert.ToInt32(l) with
         | 1 -> Life
         | 0 -> Death
         | _ -> failwith "Unrecognized label"
+
+    let outcomeToLabel outcome = 
+        match outcome with 
+        | Life  -> "1" 
+        | Death -> "0"
                 
     // Convert to a double, replacing with default in case of failure
     let maybeDouble def text =
@@ -111,7 +116,7 @@ module Data =
         else "Unknown"
 
     let readExample (line: string []) =
-        extractLabel line.[0],
+        labelToOutcome line.[0],
         { Class             = Convert.ToInt32(line.[1]);
           Name              = line.[2];
           Gender            = line.[3];
@@ -143,9 +148,6 @@ module Data =
             parseCsv sourceFile 
             |> List.tail
             |> List.map readValidation
-            |> List.map (fun e -> 
-                match (model e) with 
-                | Life  -> "1" 
-                | Death -> "0")
+            |> List.map (fun e -> outcomeToLabel (model e))
             |> List.toArray
         File.WriteAllLines(resultFile, data)
