@@ -4,18 +4,24 @@ open MachineLearning.AdaBoost
 [<EntryPoint>]
 let main argv = 
 
-    let examplesPath = @"C:\Users\Mathias\Desktop\titanic.csv"
-    
+    let dataPath = @"..\..\..\Data\"
+
+    let examplesFile = "training.csv"
+    let evaluationFile = "evaluation.csv"
+    let submissionFile = "submission.csv"
+
+    let examplesPath = dataPath + examplesFile;
     let learningSample = 
         parseCsv examplesPath
         |> List.tail
         |> List.map readExample
 
-    let classifier = Titanic.CombinedModel.train learningSample
+    let model = Titanic.CombinedModel.train learningSample
 
-//    let submissionPath = @"C:\Users\Mathias\Desktop\submission.csv"
-//    let submit = @"C:\Users\Mathias\Desktop\result.csv"
-//    create submissionPath submit classifier
+    let evaluationPath = dataPath + evaluationFile;
+    let submissionPath = dataPath + submissionFile;
+
+    create evaluationPath submissionPath model
 
     printfn "Done"
     0 // return an integer exit code
