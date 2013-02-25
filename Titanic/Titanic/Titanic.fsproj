@@ -31,6 +31,19 @@
     <WarningLevel>3</WarningLevel>
     <DocumentationFile>bin\Release\Titanic.XML</DocumentationFile>
   </PropertyGroup>
+  <PropertyGroup>
+    <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.0\Framework\v4.0\Microsoft.FSharp.Targets" Condition=" Exists('$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.0\Framework\v4.0\Microsoft.FSharp.Targets')" />
+  <ItemGroup>
+    <Compile Include="Data.fs" />
+    <Compile Include="AdaBoost.fs" />
+    <Compile Include="AdaBoostModel.fs" />
+    <Compile Include="DecisionTrees.fs" />
+    <Compile Include="DecisionTreeModel.fs" />
+    <Compile Include="CombinedModel.fs" />
+    <None Include="Script.fsx" />
+  </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="mscorlib" />
@@ -41,18 +54,6 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Data.fs" />
-    <Compile Include="AdaBoost.fs" />
-    <Compile Include="AdaBoostModel.fs" />
-    <Compile Include="DecisionTrees.fs" />
-    <Compile Include="DecisionTreeModel.fs" />
-    <Compile Include="CombinedModel.fs" />
-  </ItemGroup>
-  <PropertyGroup>
-    <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
-  </PropertyGroup>
-  <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.0\Framework\v4.0\Microsoft.FSharp.Targets" Condition=" Exists('$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.0\Framework\v4.0\Microsoft.FSharp.Targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
