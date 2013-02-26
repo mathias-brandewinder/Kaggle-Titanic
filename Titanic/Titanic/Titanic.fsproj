@@ -41,8 +41,9 @@
     <Compile Include="AdaBoostModel.fs" />
     <Compile Include="DecisionTrees.fs" />
     <Compile Include="DecisionTreeModel.fs" />
-    <Compile Include="CombinedModel.fs" />
+    <Compile Include="GenderClassTicketModel.fs" />
     <None Include="Script.fsx" />
+    <Compile Include="CombinedModel.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic" />

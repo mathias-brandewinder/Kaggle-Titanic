@@ -15,7 +15,7 @@ let main argv =
         |> List.tail
         |> List.map readExample
 
-    let model = Titanic.CombinedModel.train learningSample
+    let model = Titanic.GenderClassTicketModel.train learningSample
 
     let evaluationPath = dataPath + evaluationFile;
     let submissionPath = dataPath + submissionFile;
