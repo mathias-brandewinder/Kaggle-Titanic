@@ -16,7 +16,8 @@ module GenderClassTicketModel =
         | "Death" -> Death
         | _ -> failwith "kaboom"
 
-    let headers = [| "Class"; "Gender"; "Ticket"; "Outcome" |]
+    // tried embarked, degrades results
+    let headers = [| "Class"; "Gender"; "Ticket"; "Age"; "Siblings"; "Children"; "Outcome" |]
     let vars = Array.length headers - 1
     let variables = headers.[0 .. vars - 1]
 
@@ -27,11 +28,24 @@ module GenderClassTicketModel =
         elif v < 20. then "10-20"
         elif v < 30. then "20-30"
         else              "30+"
+    // age does not improve model
+    let age v =
+        if v < 18. then "Kid"
+        else "Adult"
+
+    let siblings v =
+        if v = 0 then "None" else "Some"
+
+    let children v =
+        if v = 0 then "None" else "Some"
 
     let extractFeatures p =
         [| p.Class.ToString();
            p.Gender;
-           ticket p.Fare |]
+           ticket p.Fare;
+           age p.Age;
+           siblings p.SiblingsOrSpouses;
+           children p.ParentsOrChildren; |]
 
     let transform example =
         let label, passenger = example
