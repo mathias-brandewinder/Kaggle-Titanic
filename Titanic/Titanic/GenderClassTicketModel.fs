@@ -39,6 +39,14 @@ module GenderClassTicketModel =
     let children v =
         if v = 0 then "None" else "Some"
 
+    let extendedGender gender (name: string) =
+        match gender with
+        | "male" ->
+            if name.Contains("Master.") then "Master" else "Male"
+        | "female" ->
+            if name.Contains("Miss.") then "Miss" else "Female"
+        | _ -> failwith "no match?"
+
     let extractFeatures p =
         [| p.Class.ToString();
            p.Gender;
