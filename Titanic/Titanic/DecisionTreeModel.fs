@@ -1,49 +1,44 @@
 ﻿namespace Titanic
 
+open Titanic
 open Titanic.Data
+open Titanic.Transforms
 open MachineLearning.DecisionTrees
 
 module DecisionTreeModel =
 
-    let extractLabel label =
-        match label with
-        | Life  -> "Life"
-        | Death -> "Death"
+    let headers = [| "Class"; "Gender"; "Fare"; "Outcome" |]
 
-    let convertLabel label =
-        match label with
-        | "Life"  -> Life
-        | "Death" -> Death
-        | _ -> failwith "kaboom"
-
-    let headers = [| "Class"; "Gender"; "SibOrSp"; "ParOrChi"; "Embark"; "Outcome"; "GenderDetails"; "Title"; "CabinSection" |]
     let vars = Array.length headers - 1
     let variables = headers.[0 .. vars - 1]
-
-    let correctedPoC v = if v > 2 then 2 else v
+    
+    let binnedFare (fare:float) =
+        if fare < 10.47 then "Cheap"
+        elif fare < 73.5 then "Medium"
+        else "Expensive"
 
     let extractFeatures p =
         [| p.Class.ToString();
            p.Gender;
-           p.SiblingsOrSpouses.ToString();
-           (correctedPoC p.ParentsOrChildren).ToString();
-           p.Embarked;
-           genderDetails p.Name;
-           job p.Name;
-           cabinSection p.Cabin |]
+           p.Fare |> binnedFare; |]
 
-    let transform example =
+    let prepare example =
         let label, passenger = example
-        Array.append (extractFeatures passenger) [| extractLabel label |]
+        [|  for feature in (extractFeatures passenger) do yield feature
+            yield (outcomeToText label) |]
 
     let decisionTreePrepare sample =
-        let data = sample |> List.map transform |> List.toArray
+        let data = 
+            sample 
+            |> List.map prepare 
+            |> List.toArray
         headers, data
 
     let train sample =
 
         printfn "Training Decision Tree"
         let tree = build (decisionTreePrepare sample)
+        
         let reverted tree p = 
             try classify p tree 
             with
@@ -53,7 +48,7 @@ module DecisionTreeModel =
             let features = extractFeatures p 
             Array.zip variables features
             |> reverted tree
-            |> convertLabel
+            |> textToOutcome
             
         printfn "Validating Decision Tree"
         sample 

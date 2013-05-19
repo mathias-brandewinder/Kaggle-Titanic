@@ -1,4 +1,6 @@
-﻿namespace MachineLearning
+﻿// Using code from 
+// https://github.com/mathias-brandewinder/Machine-Learning-In-Action
+namespace MachineLearning
 
 module DecisionTrees =
 

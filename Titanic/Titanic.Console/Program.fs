@@ -1,4 +1,5 @@
 ﻿open Titanic.Data
+open Titanic.DecisionTreeModel
 
 [<EntryPoint>]
 let main argv = 
@@ -15,7 +16,7 @@ let main argv =
         |> List.tail
         |> List.map readExample
 
-    let model = Titanic.GenderClassTicketModel.train learningSample
+    let model = train learningSample
 
     let evaluationPath = dataPath + evaluationFile;
     let submissionPath = dataPath + submissionFile;

@@ -37,13 +37,11 @@
   <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.0\Framework\v4.0\Microsoft.FSharp.Targets" Condition=" Exists('$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.0\Framework\v4.0\Microsoft.FSharp.Targets')" />
   <ItemGroup>
     <Compile Include="Data.fs" />
-    <Compile Include="AdaBoost.fs" />
-    <Compile Include="AdaBoostModel.fs" />
+    <Compile Include="Transforms.fs" />
     <Compile Include="DecisionTrees.fs" />
     <Compile Include="DecisionTreeModel.fs" />
-    <Compile Include="GenderClassTicketModel.fs" />
-    <Compile Include="CombinedModel.fs" />
     <None Include="Script.fsx" />
+    <None Include="Binning.fsx" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic" />
